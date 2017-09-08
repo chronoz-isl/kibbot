@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="F:\Study\workWintel\AutoBotProject\Autobot\build\CMakeFiles\c77b30669385b00c8a1eec1b967cacb9\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{1A6403F4-263E-3489-912E-726BC5B2D8A4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
