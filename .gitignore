@@ -1,5 +1,8 @@
-
 # Created by https://www.gitignore.io/api/c++,cmake,visualstudio
+
+# Exclude opencv and boost library
+boost_1_65_1
+opencv
 
 ### C++ ###
 # Prerequisites
