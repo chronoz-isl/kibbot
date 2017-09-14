@@ -13,6 +13,7 @@ find_package( Boost REQUIRED )
 if (Boost_FOUND)
 	message("[ OK ] Boost Found")
 	include_directories (SYSTEM ${Boost_INCLUDE_DIR})
+	link_directories (${Boost_LIBRARY_DIRS})
 endif ()
 
 find_package( OpenCV REQUIRED )
