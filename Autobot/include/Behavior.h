@@ -1,20 +1,18 @@
-#pragma once
 #ifndef  _BEHAVIOR_H_
 #define  _BEHAVIOR_H_
 
 #include <stdio.h>
 #include <iostream>
 
-using namespace std;
-
+/* Interface representing a Behavior to be used in the Arbitrator. */
 class Behavior {
 public:
-	void set_suggested_state(char state) {
-		suggested_state = state;
-	}
-	virtual char get_suggested_state()=0;
-protected:
-	char suggested_state;
+
+   /* Base Abstract method. Called by Arbitrator to get suggestion for 
+	  setting the next state. 'x' means don't care and arbitrator will
+	  NOT consider a state suggestion from this Behavior.
+    */
+	virtual char get_suggested_state() = 0;
 };
 
 class HitVirtualWall : public Behavior {
@@ -24,7 +22,7 @@ public :
 	char get_suggested_state(){
 		if (*hit_v) {
 			return ' ';
-				 
+
 		}
 		else {
 			return 'x';
@@ -44,24 +42,25 @@ public:
 protected:
 	int* hit_b;
 };
+
+/* This class represents the User Controled Behavior.
+ * The behavior has the lowest priority.
+ */
+
 class UserControl : public Behavior {
 public:
 
-	void set_suggested_state(char ss) {
-		robot_direction = ss;
+	UserControl(char * robot_direction) : robot_direction(robot_direction) {
+		*robot_direction = ' ';
 	}
 
 	char get_suggested_state() {
-		return robot_direction;
+		return *robot_direction;
 	}
 
 
 protected:
-	char robot_direction = ' ';
+	char * robot_direction;
 };
 
-
-
-
 #endif // ! _BEHAVIOR_H_
-
