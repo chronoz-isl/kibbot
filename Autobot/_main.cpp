@@ -9,6 +9,8 @@
 #include "cv.h"
 #include "highgui.h"
 #include <RecieverThread.h>
+#include <Behavior.h>
+#include <Arbitrator.h>
 
 #include <thread>
 #include <chrono>
@@ -35,19 +37,27 @@ int main() {
 	RecieverThread rt(vx, vz);
 	thread t(rt);
 	t.detach();
-
+	
 	CreateData	robotData;
 	RobotConnector	robot;
 	ofstream	record;
 	record.open("../data/robot.txt");
 
-	while (true) {
+	Behavior* bs[3];
+	bs[0] = &(HitBumper(&Bumper_state));
+	bs[1] = &(HitVirtualWall(&Kinect_state));
+	bs[2] = &(UserControl());
+	Arbitrator arbt(bs);
+	arbt.start();
+
+
+	/*while (true) {
 
 		cout << "vx : " << vx << " vz : " << vz << endl;
 
 		std::this_thread::sleep_for(std::chrono::seconds(2));
 
-	}
+	}*/
 
 	/*if (!robot.Connect(Create_Comport))
 	{
