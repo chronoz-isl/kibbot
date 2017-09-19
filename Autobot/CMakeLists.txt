@@ -5,7 +5,6 @@ set(OpenCV_DIR "${CMAKE_SOURCE_DIR}/opencv")
 set(KinectSDK_DIR "C:/Program Files/Microsoft SDKs/Kinect/v1.8")
 set(Legacy_DEF_LIB "legacy_stdio_definitions.lib")
 
-set (BOOST_ROOT "${CMAKE_SOURCE_DIR}/boost_1_65_1")
 set(Boost_USE_STATIC_LIBS OFF) 
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
