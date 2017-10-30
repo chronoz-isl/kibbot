@@ -1,5 +1,6 @@
 #ifndef  _ARBITRATOR_H_
 #define  _ARBITRATOR_H_
+
 #include <stdio.h>
 #include <iostream>
 #include <thread>
@@ -17,7 +18,19 @@ public:
 	
 	Arbitrator(Behavior** behaviors, size_t behavior_count) : 
 		_behaviors(behaviors), 
-		_behavior_count(behavior_count) { }
+		_behavior_count(behavior_count) { 
+		if (!behaviors) {
+			std::cout << "[ERROR] Arbitrator.h: NullPointerException in Constructor\n";
+		}
+		for (int i = 0; i < behavior_count; i++) {
+			if (!behaviors[i]) {
+				std::cout << "[ERROR] Arbitrator.h: NullPointerException in Constructor\n";
+				break;
+			}
+		}
+	}
+
+	// Thread Methods //
 
 	void start() {
 		_thread = boost::thread(&Arbitrator::run, this);
@@ -37,7 +50,6 @@ public:
 	char * main_state() { return &_main_state; }
 	size_t behavior_count() { return _behavior_count; }
 
-
 private:
 	void run() {
 		while (true)
@@ -51,11 +63,14 @@ private:
 				}
 				else {
 					_main_state = _behaviors[i]->get_suggested_state();
+					break;
 				}
 			}
 			boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 		}
 	}
+
+	// Fields //
 
 	/* Array of pointers to behaviors.*/
 	Behavior** _behaviors;

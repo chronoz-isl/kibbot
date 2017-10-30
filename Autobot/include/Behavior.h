@@ -15,14 +15,22 @@ public:
 	virtual char get_suggested_state() = 0;
 };
 
-class HitVirtualWall : public Behavior {
+class HitBehavior : public Behavior {
 public :
-	HitVirtualWall(int *isHit):hit_v(isHit) {
+	HitBehavior(int *isHit, char * cmd):hit_v(isHit), cmd(cmd) {
+		if (!isHit | !cmd) {
+			std::cout << "[ERROR] Behavior.h: NullPointerException in Constructor\n";
+		}
 	}
-	char get_suggested_state(){
-		if (*hit_v) {
-			return ' ';
-
+	char get_suggested_state() {
+		if (*hit_v > 0) {
+			if (*cmd == 'w' || *cmd == 'b' || *cmd == 'c') {
+				return ' ';
+			}
+			else {
+				return *cmd;
+			}
+			
 		}
 		else {
 			return 'x';
@@ -30,17 +38,7 @@ public :
 	}
 protected :
 	int* hit_v;
-};
-
-class HitBumper : public Behavior {
-public:
-	HitBumper(int *isHit):hit_b(isHit) {
-	}
-	char get_suggested_state() {
-		return ' ';
-	}
-protected:
-	int* hit_b;
+	char * cmd;
 };
 
 /* This class represents the User Controled Behavior.
@@ -51,7 +49,9 @@ class UserControl : public Behavior {
 public:
 
 	UserControl(char * robot_direction) : robot_direction(robot_direction) {
-		*robot_direction = ' ';
+		if (!robot_direction) {
+			std::cout << "[ERROR] Behavior.h: NullPointerException in Constructor\n";
+		}
 	}
 
 	char get_suggested_state() {

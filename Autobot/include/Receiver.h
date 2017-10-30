@@ -1,19 +1,25 @@
 #ifndef _RECEIVER_H_
 #define _RECEIVER_H_
 
-
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 
 #include <server.h>
+#include <ctrl_session.h>
+#include <utility.h>
 
 /* Class which receives instructions from user. */
 class Receiver {
 public:
-	Receiver(int port, char * cmd_out) : _port(port) , cmd_out(cmd_out) {}
+	Receiver(int port, char * cmd_out) : _port(port) , cmd_out(cmd_out) {
+		if (!cmd_out) {
+			std::cout << "[ERROR] Receiver.h: NullPointerException in Constructor\n";
+		}
+	}
 
 	void start() {
 		_thread = boost::thread(&Receiver::run, this);
+		applyPriority(&_thread, 5);
 	}
 
 	void join() {
@@ -30,7 +36,7 @@ private:
 		{
 			boost::asio::io_service io_service;
 
-			server s(io_service, CTRL_TCP_PORT, cmd_out);
+			server<ctrl_session> s(io_service, _port, cmd_out);
 
 			io_service.run();
 		}

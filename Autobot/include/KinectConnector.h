@@ -7,6 +7,11 @@
 
 #include "opencv2/core/core.hpp"
 
+#define DEPTH_IMG_WIDTH 80
+#define DEPTH_IMG_HEIGHT 60
+#define DEPTH_IMG_RESOLUTION NUI_IMAGE_RESOLUTION_80x60
+
+
 class KinectConnector
 {
 public :
@@ -14,7 +19,7 @@ public :
 	{
 		isConnect = false;
 
-		depthD16 = new USHORT[640*480];
+		depthD16 = new USHORT[DEPTH_IMG_WIDTH * DEPTH_IMG_HEIGHT];
 		colorCoordinates = new LONG[640*480*2];
 		colorRGBX = new BYTE[1280*960*4];
 	}
@@ -45,6 +50,7 @@ public :
 		//create color stream
 		hr = sensor->NuiImageStreamOpen( NUI_IMAGE_TYPE_COLOR, NUI_IMAGE_RESOLUTION_1280x960, 0, 2, NULL, &pColorStreamHandle );
 		//hr = sensor->NuiImageStreamOpen( NUI_IMAGE_TYPE_COLOR, NUI_IMAGE_RESOLUTION_640x480, 0, 2, NULL, &pColorStreamHandle );
+		//hr = sensor->NuiImageStreamOpen(NUI_IMAGE_TYPE_COLOR, NUI_IMAGE_RESOLUTION_320x240, 0, 2, NULL, &pColorStreamHandle);
 		if( FAILED(hr) )
 		{
 			std::cout << "NuiImageStreamOpen NUI_IMAGE_TYPE_COLOR failed." << std::endl;
@@ -52,7 +58,8 @@ public :
 		}
 		
 		//create depth stream
-		hr = sensor->NuiImageStreamOpen( NUI_IMAGE_TYPE_DEPTH, NUI_IMAGE_RESOLUTION_640x480, NUI_IMAGE_STREAM_FLAG_DISTINCT_OVERFLOW_DEPTH_VALUES, 2, NULL, &pDepthStreamHandle);
+		//hr = sensor->NuiImageStreamOpen( NUI_IMAGE_TYPE_DEPTH, NUI_IMAGE_RESOLUTION_640x480, NUI_IMAGE_STREAM_FLAG_DISTINCT_OVERFLOW_DEPTH_VALUES, 2, NULL, &pDepthStreamHandle);
+		hr = sensor->NuiImageStreamOpen(NUI_IMAGE_TYPE_DEPTH, DEPTH_IMG_RESOLUTION, NUI_IMAGE_STREAM_FLAG_DISTINCT_OVERFLOW_DEPTH_VALUES, 2, NULL, &pDepthStreamHandle);
 		if( FAILED(hr) )
 		{
 			std::cout << "NuiImageStreamOpen NUI_IMAGE_TYPE_DEPTH failed." << std::endl;
@@ -86,7 +93,7 @@ public :
 	{
 		bool isGrabData = false;
 		colorImg.create(960, 1280, CV_8UC3);
-		depthImg.create(480, 640, CV_16SC1);
+		depthImg.create(DEPTH_IMG_HEIGHT, DEPTH_IMG_WIDTH, CV_16SC1);
 		indexImg.create(960, 1280, CV_32SC1);
 		pointImg.create(480, 640, CV_32FC3);
 
@@ -140,6 +147,8 @@ public :
 			isGrabData = true;
 		}
 
+		/* #Removed because depth changed # 
+
 		////////////// match //////////////////////////
 		sensor->NuiImageGetColorPixelCoordinateFrameFromDepthPixelFrameAtResolution(
 			NUI_IMAGE_RESOLUTION_1280x960, NUI_IMAGE_RESOLUTION_640x480, 
@@ -177,7 +186,7 @@ public :
 				pointImg.at<cv::Vec3f>(i, j) = cv::Vec3f(-8000*vec.x, 8000*vec.y, 8000*vec.z);
 			}
 		}
-
+		*/
 		return isGrabData;
 	}
 

@@ -7,28 +7,31 @@
 class session
 {
 public:
-	session(boost::asio::io_service& io_service, char * cmd_out);
-	~session();
+
+	session(boost::asio::io_service& io_service) : _socket(io_service) { }
 
 	/* Gets the Socket object associated with this session. */
-	boost::asio::ip::tcp::socket& socket();
+	boost::asio::ip::tcp::socket& socket() {
+        return _socket;
+	}
 
 	/* Starts the session. This is called in the constructor.*/
-	void start();
+	virtual void start() = 0;
 
 	/* Gets the data received from communication. */
-	char* data();
+	char* data() {
+        return _data;
+    }
 
-private:
-	void handle_read(const boost::system::error_code& error, size_t bytes_transferred);
-	void handle_write(const boost::system::error_code& error);
+protected:
+	void clean() {
+		memset(_data, 0, sizeof(_data));
+	}
 
 	enum { max_length = 1024 };
 
-	int count = 0;
 	boost::asio::ip::tcp::socket _socket;
 	char _data[max_length];
-	char * cmd_out;
 };
 
 #endif /* _SESSION_H */

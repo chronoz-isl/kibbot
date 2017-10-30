@@ -3,10 +3,11 @@
 
 #include <iostream>
 #include <session.h>
+#include <cstring>
 
-void onMessageReceived(session* s, char * cmd_out) {
-	std::cout << "received : " << s->data()[0] << std::endl;
-	*cmd_out = s->data()[0];
+void onMessageReceived(char * received, char * cmd_out) {
+	std::cout << "received : " << *received << std::endl;
+	*cmd_out = received[0];
 }
 
 #endif /* _INTERRUPTS_H_ */
